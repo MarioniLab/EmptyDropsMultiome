@@ -1,0 +1,26 @@
+Package: eDv3
+Title: Detects cell containing droplets
+Version: 0.0.0.9000
+Authors@R: 
+    person("Stathis", "Megas", , "stathismegas@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-2038-3040"))
+Description: Droplet-based protocols for single-cell sequencing can lead to droplets without a cell but with free floating fragments, 
+             which would appear as cells thereby confounding downstream analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    Math,
+    Seurat,
+    SparkR,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    DropletUtils,
+    egg,
+    ggplot2,
+    Matrix,
+    mixtools,
+    S4Vectors,
+    stats
