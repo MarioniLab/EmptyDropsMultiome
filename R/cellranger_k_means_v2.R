@@ -37,8 +37,6 @@ simpler_ordmag <- function(x){
 #'
 #' @return Dataframe with with log-transformed column values
 #'
-#' @examples
-#'
 log_transform <- function(data){
   # data: dataframe with column "atac_count" and "rna_count"
   # output: dataframe with log10 transformed columns
@@ -56,7 +54,6 @@ log_transform <- function(data){
 #'             data is sorted wrt 'atac_count' (int), 'rna_count' (int), 'dup' (bool).
 #' @return Dataframe with altered is_cell column.
 #'
-#' @examples
 transfer_labels_to_dedupl_v3 <- function(data){
   # data: dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell' (bool), 'dup' (bool)
   # data is sorted wrt 'atac_count' (int), 'rna_count' (int), 'dup' (bool)
@@ -90,7 +87,6 @@ transfer_labels_to_dedupl_v3 <- function(data){
 #' @return Dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell'.
 #' @export
 #'
-#' @examples
 call_cells <- function(data, verbose=TRUE){
   # data: dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell',
   #       e.g.   df <- data.frame( "rna_count"= seurat_024@meta.data[["nCount_RNA"]], "atac_count"= seurat_024@meta.data[["nCount_ATAC"]],

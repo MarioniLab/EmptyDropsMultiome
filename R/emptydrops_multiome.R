@@ -45,7 +45,6 @@
 #'
 #' @export
 #'
-#' @examples
 emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NULL, count_matrix_atac, lower_atac=NULL, barhop_atac=NULL, niter_rna=10000, niter_atac=25000, verbose=TRUE ){
   
   if (!is.null(lower_rna) & !is.null(barhop_rna) & !is.null(lower_atac) & !is.null(barhop_atac)  ){

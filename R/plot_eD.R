@@ -8,7 +8,6 @@
 #' @return invisible(NULL)
 #' @export
 #'
-#' @examples
 cell_calling_plot <- function(x_axis, y_axis, colors, title){
 
 

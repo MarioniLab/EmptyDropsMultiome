@@ -5,7 +5,6 @@
 #'
 #' @return A real vector with the two mean values.
 #'
-#' @examples
 find_tip <- function(data){
   # data: dataframe with data$rna being the number of RNA counts, and data$atac being the number of ATAC counts
   # output: center coordinates of the center of the droplets in the top percentile
@@ -37,7 +36,6 @@ find_tip <- function(data){
 #'
 #' @return A single real number.
 #'
-#' @examples
 dist_point_to_line <- function(equation, point){
   # equation: numeric vector for intercept=equation[1] and slope=equation[2]
   # point: numeric vector for coordinates of point
@@ -67,7 +65,6 @@ dist_point_to_line <- function(equation, point){
 #'
 #' @return A 2d vector c(intercept, slope) defining a line in 2d Euclidean space
 #'
-#' @examples
 calc_intercept_of_parallel_line <- function(equation, dist){
   # equation: numeric vector for intercept=equation[1] and slope=equation[2]
   # dist: real number for the distance between the given line and the line to be calculated
@@ -92,7 +89,6 @@ calc_intercept_of_parallel_line <- function(equation, dist){
 #'
 #' @return 2d vector c(intercept, slope) defining the k-means line.
 #'
-#' @examples
 calc_ambiguous_above <- function(data, equation){
   # given the data, calculate the ambiguous above area (specifically the line outlining its upper bound) (i.e. the area just north of the cellranger-arc line)
   tip_center <- find_tip(data)
@@ -123,7 +119,6 @@ calc_ambiguous_above <- function(data, equation){
 #'
 #' @return A 2d vector c(intercept, slope) defining a line in 2d Euclidean space.
 #'
-#' @examples
 calc_lower_line <- function(x, y, equation){
   # calculate a line equation_lower which is parallel to equation and goes through the point (x, y)
 

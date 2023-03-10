@@ -20,7 +20,6 @@ log_transform_v2 <- function(data){
 #'
 #' @return Two dimensional vector c(intercept, slope)
 #'
-#' @examples
 perp_bisector <- function(center1, center2){
   # center1: numeric vector with position coordinates
   # center2: numeric vector with position coordinates

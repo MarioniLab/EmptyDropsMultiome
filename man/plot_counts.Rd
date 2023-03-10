@@ -41,6 +41,9 @@ plot_counts(
 
 \item{label}{label for x axis}
 }
+\value{
+None
+}
 \description{
 Plot histogram of counts for lower and barhop_end inference
 }

@@ -136,7 +136,7 @@ fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
 #' @param sd2 the standard deviation of the second Gaussian distribution  
 #' @param lam2 the mixing ratio of the second Gaussian distribution   
 #'
-#' @return
+#' @return Real number for the point of intersection of the Gaussians
 #'
 equil_of_normals <- function(mu1, sd1, lam1, mu2, sd2, lam2){
   
@@ -175,7 +175,7 @@ equil_of_normals <- function(mu1, sd1, lam1, mu2, sd2, lam2){
 #' @param vline2 x value of second vertical line
 #' @param label label for x axis
 #'
-#' @return
+#' @return None
 #' @export
 #'
 plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000, vline1, vline2, label){
@@ -235,7 +235,7 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
                            args = list(mu2, sigma2, lam = lam2),
                            colour = "blue", lwd = 1) +
     ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 3*n* lam2* dnorm(mu2, mu2, sigma2)), oob = function(x, limits) x)+
+    ggplot2::scale_y_continuous( limit = c(0, 3*n* lam2* stats::dnorm(mu2, mu2, sigma2)), oob = function(x, limits) x)+
     ggplot2::ylab("Frequency") +
     ggplot2::xlab("nCount") +
     ggplot2::ggtitle("Final GMM Fit")+

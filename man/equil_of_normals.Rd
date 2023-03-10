@@ -19,6 +19,9 @@ equil_of_normals(mu1, sd1, lam1, mu2, sd2, lam2)
 
 \item{lam2}{the mixing ratio of the second Gaussian distribution}
 }
+\value{
+Real number for the point of intersection of the Gaussians
+}
 \description{
 Find the point of equal probability between two Gaussian components of a Gaussian Mixture Model
 }

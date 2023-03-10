@@ -43,8 +43,6 @@
 #' Numeric, the result of the correction of PValue_multi using the Benjamini-Hochberg method
 #'
 #'
-#' @examples
-#'
 #'
 aggr_p_values <- function( e.out1, e.out2){
   # rename columns to before taking their disjoint union during merging

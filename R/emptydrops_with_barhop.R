@@ -18,7 +18,6 @@
 #' Numeric, the p-values corrected using the Benjamini-Hochberg method
 #' @export
 #'
-#' @examples
 emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000){
   # calls cells using a single modality
   # inputs: count_matrix is a features-by-cell matrix,

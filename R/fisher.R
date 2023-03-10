@@ -4,7 +4,6 @@
 #'
 #' @return Real number of the aggregated p-value.
 #'
-#' @examples
 fisher_v2 <- function(pvalues)
 {
   # use chi-squared function to aggregate p-values derived from different hypothesis tests
