@@ -27,13 +27,8 @@ emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000
   # outputs: dataframe like e.out
 
 
-  # # inputs by hand (to be automated)
-  # barhop_end = 20
-  # lower = 120
-
   # subset out the barhops from count matrix to feed it into emptydrops
-  #barhops <- colnames(count_matrix)[colSums(count_matrix)<barhop_end]
-  #counts_wo_barhop <- count_matrix[,! colnames(count_matrix) %in% barhops]
+
   barhops <- Matrix::colSums(count_matrix)<barhop_end
   counts_wo_barhop <- count_matrix[, !barhops]
   if (!length(colnames(count_matrix))==0){
@@ -51,14 +46,9 @@ emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000
   all.lr_barhops <- rep(as.numeric(NA), sum(barhops))
   all.p_barhops <- rep(as.numeric(NA), sum(barhops))
   all.lim_barhops <- rep(as.numeric(NA), sum(barhops))
-  #astats$metadata <- rep(as.numeric(NA), length(barhops))
   fdr_barhop <- rep(as.numeric(NA), sum(barhops))
 
-  # output <- DataFrame(Total=totals, LogProb=all.lr, PValue=all.p, Limited=all.lim, row.names=colnames(m))
-  # metadata(output) <- c(astats$metadata, list(niters=niters, ambient=ambient.prop, alpha=alpha))
-  #barhop_output <- DataFrame(Total=totals_barhop, LogProb=all.lr_barhops, PValue=all.p_barhops, Limited=all.lim_barhops, row.names=barhops, FDR=fdr_barhop)
   barhop_output <- S4Vectors::DataFrame(Total=totals_barhop, LogProb=all.lr_barhops, PValue=all.p_barhops, Limited=all.lim_barhops, row.names=barhop_names, FDR=fdr_barhop)
-  #metadata(barhop_output) <- c(astats$metadata, list(niters=niters, ambient=ambient.prop, alpha=alpha))
 
   # merge the two dfs
   eD.out <- rbind(barhop_output, e.out)

@@ -9,6 +9,8 @@ fit_3_normals_atac(exp_counts_per_cell, verbose = TRUE)
 }
 \arguments{
 \item{exp_counts_per_cell}{a vector with the ATAC library size per barcode.}
+
+\item{verbose}{if TRUE various intermediate steps and plots are printed.}
 }
 \value{
 A 2d vector with the values lower and barhop_end for ATAC.

@@ -16,14 +16,13 @@ eD.out_multi <- emptydrops_multiome(count_matrix_rna, lower_rna, barhop_rna, cou
 print("the number of cells detected is: ")
 print(sum(eD.out_multi$FDR_multi<0.001 & ! is.na(eD.out_multi$FDR_multi)))
 
-
-
-
 test_that("dataframe is not empty", {
   expect_equal(sum(eD.out_multi$Total_RNA) > 0, TRUE)
   expect_equal(sum(eD.out_multi$Total_chromatin) > 0, TRUE)
   expect_equal(sum(eD.out_multi$FDR_multi) > 0, TRUE)
 })
+
+
 
 
 
@@ -35,7 +34,6 @@ barhop_atac = NULL
 eD.out_multi <- emptydrops_multiome(count_matrix_rna, lower_rna, barhop_rna, count_matrix_atac, lower_atac, barhop_atac )
 print("the number of cells detected is: ")
 print(sum(eD.out_multi$FDR_multi<0.001 & ! is.na(eD.out_multi$FDR_multi)))
-
 
 test_that("dataframe is not empty", {
   expect_equal(sum(eD.out_multi$Total_RNA) > 0, TRUE)

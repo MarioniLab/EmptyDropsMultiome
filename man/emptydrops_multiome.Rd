@@ -6,13 +6,14 @@
 \usage{
 emptydrops_multiome(
   count_matrix_rna,
-  lower_rna,
-  barhop_rna,
+  lower_rna = NULL,
+  barhop_rna = NULL,
   count_matrix_atac,
-  lower_atac,
-  barhop_atac,
+  lower_atac = NULL,
+  barhop_atac = NULL,
   niter_rna = 10000,
-  niter_atac = 25000
+  niter_atac = 25000,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ emptydrops_multiome(
 \item{niter_rna}{single real number for the number of iteration to be performed to statistically compare the RNA modality with the ambient profile.}
 
 \item{niter_atac}{single real number for the number of iteration to be performed to statistically compare the ATAC modality with the ambient profile.}
+
+\item{verbose}{if TRUE various intermediate steps and plots are printed.}
 }
 \value{
 a DataFrame object (from the S4Vectors package) with the following components:

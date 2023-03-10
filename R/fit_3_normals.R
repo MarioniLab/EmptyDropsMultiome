@@ -8,7 +8,6 @@
 #'
 #' @export
 #'
-#' @examples
 fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 
   my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
@@ -68,18 +67,14 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 #' which are used in emptydrops.
 #'
 #' @param exp_counts_per_cell a vector with the ATAC library size per barcode.
+#' @param verbose if TRUE various intermediate steps and plots are printed.
 #'
 #' @return A 2d vector with the values lower and barhop_end for ATAC.
 #'
 #' @export
 #'
-#' @examples
 fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
   
-  #exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
-  
-  
-  #my_mix <- normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
   t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
                                            mu=c(5,100,10000), sigma=c(5,50,800) , epsilon=1e-09))
   print(inherits(t,"try-error"))
@@ -130,7 +125,7 @@ fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
 
 
 
-# find point of equal probability
+# Find point of equal probability
 
 #' Find the point of equal probability between two Gaussian components of a Gaussian Mixture Model
 #'
@@ -177,21 +172,21 @@ equil_of_normals <- function(mu1, sd1, lam1, mu2, sd2, lam2){
 #' @param lam2 lambda of first Gaussian
 #' @param max upper limit of RNA range
 #' @param vline1 x value of first vertical line
-#' @param vline2 x vavlue of second vertical line
+#' @param vline2 x value of second vertical line
+#' @param label label for x axis
 #'
 #' @return
 #' @export
 #'
-#' @examples
-plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000, vline1, vline2){
+plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000, vline1, vline2, label){
   
   observations = data.frame( "nCount" = nCount )
   
   n = length(observations$nCount)
   
-  overview = ggplot2::ggplot(observations) +
+  overview = ggplot2::ggplot(observations) + ggplot2::theme_bw() +
     ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
-                            fill = "white") +
+                            fill = "black") +
     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
                            args = list(mu1, sigma1, lam = lam1),
                            colour = "red", lwd = 1) +
@@ -211,11 +206,28 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
                       # linetype="dotted",
                       color = "blue",
                       size=0.5)
+  
+  overview_nofit = ggplot2::ggplot(observations) + ggplot2::theme_bw() +
+    ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
+                            fill = "black") +
+    ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
+    ggplot2::scale_y_continuous( limit = c(0, max), oob = function(x, limits) x)+
+    ggplot2::ylab("Frequency") +
+    ggplot2::xlab("nCount") +
+    ggplot2::ggtitle("Final GMM Fit")+
+    ggplot2::geom_vline(xintercept = vline1,
+                        # linetype="dotted",
+                        color = "purple",
+                        size=0.5)+
+    ggplot2::geom_vline(xintercept = vline2,
+                        # linetype="dotted",
+                        color = "blue",
+                        size=0.5)
 
   
-  zoomin = ggplot2::ggplot(observations) +
+  zoomin = ggplot2::ggplot(observations) + ggplot2::theme_bw() + 
     ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
-                            fill = "white") +
+                            fill = "black") +
     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
                            args = list(mu1, sigma1, lam = lam1),
                            colour = "red", lwd = 1) +
@@ -236,7 +248,8 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
                         color = "blue",
                         size=0.5)
   
-  print(overview)
+  print(overview) 
+  print(overview_nofit) 
   print(zoomin)
   
 }

@@ -4,10 +4,12 @@
 \alias{call_cells}
 \title{Call cells using k-means and store this information in is_cell.}
 \usage{
-call_cells(data)
+call_cells(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{Dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell'.}
+
+\item{verbose}{if TRUE various intermediate steps and plots are printed.}
 }
 \value{
 Dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell'.

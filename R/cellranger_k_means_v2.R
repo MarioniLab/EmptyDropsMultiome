@@ -69,27 +69,14 @@ transfer_labels_to_dedupl_v3 <- function(data){
   uniques = append(uniques, length(data$dup)+1)
   numb_of_duplicates = diff(uniques)-1
 
-  #uniques = uniques[seq(1, length(uniques)-1)]
-
-  #loc_uniques = which( numb_of_duplicates != 0 )
   i=1
   for (cell_no in uniques[seq(1, length(uniques)-1)]){
-    # print("is_cell? ")
-    # print(data$is_cell[cell_no])
-    # print("numb of duplicates: ")
-    # print(numb_of_duplicates[i])
-
-
     if (numb_of_duplicates[i]!=0){
-      # print("change locations :")
-      # print(seq(cell_no+1, cell_no+numb_of_duplicates[i]))
-      # # seq(cell_no+1, cell_no+numb_of_duplicates[i])
       data$is_cell[seq(cell_no+1, cell_no+numb_of_duplicates[i])]  = data$is_cell[cell_no]
     }
     i = i+1
   }
-  #data
-
+  
   return(data)
 }
 
@@ -98,12 +85,13 @@ transfer_labels_to_dedupl_v3 <- function(data){
 #' Call cells using k-means and store this information in is_cell.
 #'
 #' @param data Dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell'.
+#' @param verbose if TRUE various intermediate steps and plots are printed.
 #'
 #' @return Dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell'.
 #' @export
 #'
 #' @examples
-call_cells <- function(data){
+call_cells <- function(data, verbose=TRUE){
   # data: dataframe with columns 'atac_count' (int), 'rna_count' (int), 'excluded' (bool), 'is_cell',
   #       e.g.   df <- data.frame( "rna_count"= seurat_024@meta.data[["nCount_RNA"]], "atac_count"= seurat_024@meta.data[["nCount_ATAC"]],
   #              "excluded"= rep(F,each=length(colnames(seurat_024))),  "is_cell"= rep(0,each=length(colnames(seurat_024)))    )
@@ -193,7 +181,7 @@ call_cells <- function(data){
   cell_calling_plot(log10(data$atac_count + 0.1), log10(data$rna_count + 0.1), factor(data$is_cell ), paste0("cR-arc calling after label transfer: ", sum(data$is_cell), " cells;", equation))
   graphics::abline(a=equation[1],b=equation[2], col="blue")
 
-  print("The number of cells called by cellranger-arc is approximately ")
+  print("The number of cells called by k-means is ")
   print(paste0(sum(data$is_cell), " cells"))
 
 

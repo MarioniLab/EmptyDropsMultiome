@@ -14,7 +14,8 @@ plot_counts(
   lam2,
   max = 50000,
   vline1,
-  vline2
+  vline2,
+  label
 )
 }
 \arguments{
@@ -36,7 +37,9 @@ plot_counts(
 
 \item{vline1}{x value of first vertical line}
 
-\item{vline2}{x vavlue of second vertical line}
+\item{vline2}{x value of second vertical line}
+
+\item{label}{label for x axis}
 }
 \description{
 Plot histogram of counts for lower and barhop_end inference

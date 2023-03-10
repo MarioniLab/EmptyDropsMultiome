@@ -53,19 +53,12 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
   graphics::par(mfrow = c(2, 2)) # Create a 2 x 2 plotting matrix
   graphics::par(mar=c(5,5,4,1)+.1)
 
-
-  cell_calling_plot(log10(e_multi.out$Total_chromatin + 0.1), log10(e_multi.out$Total_RNA + 0.1), factor(e_multi.out$FDR_multi<0.001 ), "eD_multi tentative calling")
+  cell_calling_plot(log10(e_multi.out$Total_chromatin + 0.1), log10(e_multi.out$Total_RNA + 0.1), factor(e_multi.out$FDR_multi<0.001 ), "eD_multi tentative")
   graphics::abline(a=equation_k_means[1],b=equation_k_means[2], col="blue")
   graphics::abline(a=equation_parallel[1],b=equation_parallel[2], col="blue")
-
 
   cell_calling_plot(log10(e_multi.out$Total_chromatin + 0.1), log10(e_multi.out$Total_RNA + 0.1), factor(rownames(e_multi.out) %in% cell_barcodes ), "cR_multi calling")
   graphics::abline(a=equation_k_means[1],b=equation_k_means[2], col="blue")
-  graphics::abline(a=equation_parallel[1],b=equation_parallel[2], col="blue")
-
-
-  # e_multi.out_new$FDR_multi[e_multi.out_new$barhop_amb_tent_RNA<3] <- 1
-  # e_multi.out_new$FDR_multi[e_multi.out_new$barhop_amb_tent_chromatin<3] <- 1
 
   # reject by default droplets below both lowers or at least one of the barhops or the na
   e_multi.out_new$FDR_multi[e_multi.out_new$barhop_amb_tent_RNA==2] <- 1
@@ -73,7 +66,6 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
 
 
   # calculate equation_lower and reject cells below it
-  #e_multi.out_new$FDR_multi[e_multi.out_new$barhop_amb_tent_RNA<3 & e_multi.out_new$barhop_amb_tent_chromatin<3] <- 1
   equation_lower = calc_lower_line(log10(lower_atac+0.1), log10(lower_rna+0.1), equation_parallel)
   e_multi.out_new$FDR_multi[log10(e_multi.out_new$Total_RNA+0.1) < equation_lower[2] * log10(e_multi.out_new$Total_chromatin + 0.1) + equation_lower[1] ] <- 1
 
@@ -88,7 +80,6 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
 
 
   # accept by default all the droplets above the ambiguous area
-  #e_multi.out_new[cell_barcodes, ]$FDR_multi <- 0
   e_multi.out_new$FDR <- e_multi.out_new$FDR_multi
   e_multi.out_new[cells_above_ambiguous, ]$FDR_multi <- 0
 
