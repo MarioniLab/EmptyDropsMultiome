@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-fit_3_normals <- function(exp_counts_per_cell, verbose){
+fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 
   #exp_counts_per_cell = unname(Matrix::colSums(srat_029_all@assays[["RNA"]]@counts))
   #exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
