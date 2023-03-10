@@ -5,10 +5,12 @@
 \title{Fits a mixture of three normal distributions to histogram of RNA counts, to infer the parameters lower and barhop_end
 which are used in emptydrops.}
 \usage{
-fit_3_normals(exp_counts_per_cell)
+fit_3_normals(exp_counts_per_cell, verbose = TRUE)
 }
 \arguments{
 \item{exp_counts_per_cell}{a vector with RNA library size per barcode.}
+
+\item{verbose}{if TRUE various intermediate steps and plots are printed.}
 }
 \value{
 A 2d vector with the values lower and barhop_end for RNA.

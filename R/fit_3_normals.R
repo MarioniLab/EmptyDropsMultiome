@@ -2,7 +2,7 @@
 #' which are used in emptydrops.
 #'
 #' @param exp_counts_per_cell a vector with RNA library size per barcode.
-#' @param verbose a Boolean variable indicating whether to print computation messages.
+#' @param verbose if TRUE various intermediate steps and plots are printed.
 #'
 #' @return A 2d vector with the values lower and barhop_end for RNA.
 #'
@@ -11,22 +11,33 @@
 #' @examples
 fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 
-  #exp_counts_per_cell = unname(Matrix::colSums(srat_029_all@assays[["RNA"]]@counts))
-  #exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
-
   my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
+  
+  t <- try(   my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09) )
+  print(inherits(t,"try-error"))
+  if( inherits(t,"try-error")  ){
+    my_mix <- data.frame("mu"=c(25, 200, 1000  ), "sigma"=c(1, 60, 300  ), "lambda"= c(1/1.15, 0.10/1.15, 0.05/1.15))
+  }
 
+  n = length(exp_counts_per_cell)
   mu_order = order(my_mix$mu)
   mu_barhop = my_mix$mu[mu_order[1]]
   mu_ambient = my_mix$mu[mu_order[2]]
   mu_true_cells = my_mix$mu[mu_order[3]]
-  lower = mu_ambient+1.5*my_mix$sigma[mu_order[2]]
-  barhop = mu_barhop+4*my_mix$sigma[mu_order[1]]
   
-  n = length(exp_counts_per_cell)
+  if (mu_barhop > 100 | mu_ambient >700){
+    my_mix <- data.frame("mu"=c(25, 200, 1000  ), "sigma"=c(1, 60, 300  ), "lambda"= c(1/1.15, 0.10/1.15, 0.05/1.15))
+    n = length(exp_counts_per_cell)
+    mu_order = order(my_mix$mu)
+    mu_barhop = my_mix$mu[mu_order[1]]
+    mu_ambient = my_mix$mu[mu_order[2]]
+    mu_true_cells = my_mix$mu[mu_order[3]]
+  }
+
+  lower = my_mix$mu[mu_order[2]]+1.5*my_mix$sigma[mu_order[2]]
   equil_pt = equil_of_normals(mu_barhop, my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
                               mu_ambient, my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]])
-  
+
   if (verbose){
     
     print(paste0("the mu's are : ", my_mix$mu[1],", ", my_mix$mu[2],", ", my_mix$mu[3] ))
@@ -37,91 +48,14 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
     my_mix$lambda
     print(paste0("equil point is ", equil_pt) )
     print(paste0("the lower is : ", lower ))
-    print(paste0("the barhop_end is : ", barhop ))
+
+    plot_counts(exp_counts_per_cell, mu_barhop, my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
+                mu_ambient, my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]], 
+                vline1 =  equil_pt, vline2 = lower)
     
   }
-  
-  observations = data.frame( "nCount_RNA" = exp_counts_per_cell )
 
-  q1 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_RNA), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::scale_x_continuous( limit = c(0, 800), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 15000), oob = function(x, limits) x)+
-    ggplot2::geom_vline(xintercept = lower,
-               # linetype="dotted",
-               color = "blue",
-               size=0.5)+
-    ggplot2::geom_vline(xintercept = barhop,
-               # linetype="dotted",
-               color = "red",
-               size=0.5)
-
-  q2 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_RNA), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::scale_x_continuous( limit = c(0, lower+30), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 10000), oob = function(x, limits) x)+
-    ggplot2::geom_vline(xintercept = lower,
-               # linetype="dotted",
-               color = "blue",
-               size=0.5)+
-    ggplot2::geom_vline(xintercept = barhop,
-               # linetype="dotted",
-               color = "red",
-               size=0.5)
-
-
-  q3 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_RNA), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::scale_x_continuous( limit = c(mu_true_cells-my_mix$sigma[mu_order[3]], true_cells+my_mix$sigma[mu_order[3]]), oob = function(x, limits) x)+
-    ggplot2::ylim(0,75)
-
-  egg::ggarrange(q1, q2, q3 ,
-                     labels = c("A", "B", "C"),
-                     ncol = 3, nrow = 1)
-
-  return(c(lower, barhop))
+  return(c(lower, equil_pt))
 }
 
 
@@ -140,150 +74,58 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 #' @export
 #'
 #' @examples
-fit_3_normals_atac <- function(exp_counts_per_cell){
+fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
   
   #exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
   
   
   #my_mix <- normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
   t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
-                                           mu=c(5,100,20000), sigma=c(5,50,800) , epsilon=1e-09))
+                                           mu=c(5,100,10000), sigma=c(5,50,800) , epsilon=1e-09))
   print(inherits(t,"try-error"))
   if( inherits(t,"try-error")  ){
     my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))
   }
-
-  print(paste0("the mus are : ", my_mix$mu[1],", ", my_mix$mu[2],", ", my_mix$mu[3] ))
-  my_mix$mu
-  print(paste0("the sigmas are : ", my_mix$sigma[1],", ", my_mix$sigma[2],", ", my_mix$sigma[3] ))
-  my_mix$sigma
-  print(paste0("the lambdas are : ", my_mix$lambda[1],", ", my_mix$lambda[2],", ", my_mix$lambda[3] ))
-  my_mix$lambda
-  mu_order = order(my_mix$mu)
-  mu_order
-
-  lower = my_mix$mu[mu_order[2]]+2*my_mix$sigma[mu_order[2]]
-  if (lower>180){
-    lower = 180
-  }
-  lower
-  barhop = my_mix$mu[mu_order[1]]+4*my_mix$sigma[mu_order[1]]
-  barhop
-  true_cells = my_mix$mu[mu_order[3]]
-  observations = data.frame( "nCount_ATAC" = exp_counts_per_cell )
-
-  q1 =ggplot2::ggplot(observations, ggplot2::aes(x = nCount_ATAC)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_ATAC), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::scale_x_continuous( limit = c(0, 500), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 15000), oob = function(x, limits) x)+
-    ggplot2::geom_vline(xintercept = lower,
-               # linetype="dotted",
-               color = "blue",
-               size=0.5)+
-    ggplot2::geom_vline(xintercept = barhop,
-               # linetype="dotted",
-               color = "red",
-               size=0.5)
   
-  n = length(observations$nCount_ATAC)
-  equil_pt = equil_of_normals(my_mix$mu[mu_order[1]], my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
-                              my_mix$mu[mu_order[2]], my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]])
-  print(paste0("equil point is ", equil_pt) )
+  n = length(exp_counts_per_cell)
+  mu_order = order(my_mix$mu)
+  mu_barhop = my_mix$mu[mu_order[1]]
+  mu_ambient = my_mix$mu[mu_order[2]]
+  mu_true_cells = my_mix$mu[mu_order[3]]
+  
+  if (mu_barhop > 60 | mu_ambient >600){
+    my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))
+    mu_order = order(my_mix$mu)
+    mu_barhop = my_mix$mu[mu_order[1]]
+    mu_ambient = my_mix$mu[mu_order[2]]
+    mu_true_cells = my_mix$mu[mu_order[3]]
+  }
+  
+  equil_pt = equil_of_normals(mu_barhop, my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
+                              mu_ambient, my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]])
+  lower = my_mix$mu[mu_order[2]]+2*my_mix$sigma[mu_order[2]]
+  true_cells = my_mix$mu[mu_order[3]]
+  
+  
+  if (verbose){
+    
+    print(paste0("the mu's are : ", my_mix$mu[1],", ", my_mix$mu[2],", ", my_mix$mu[3] ))
+    my_mix$mu
+    print(paste0("the sigma's are : ", my_mix$sigma[1],", ", my_mix$sigma[2],", ", my_mix$sigma[3] ))
+    my_mix$sigma
+    print(paste0("the lambdas are : ", my_mix$lambda[1],", ", my_mix$lambda[2],", ", my_mix$lambda[3] ))
+    my_mix$lambda
+    print(paste0("equil point is ", equil_pt) )
+    print(paste0("the lower is : ", lower ))
+    
+    plot_counts(exp_counts_per_cell, mu_barhop, my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
+                mu_ambient, my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]], 
+                vline1 =  equil_pt, vline2 = lower)
+    
+  }
+  
 
-                      
-  q11 = ggplot2::ggplot(observations) +
-    ggplot2::geom_histogram(ggplot2::aes(x = nCount_ATAC), binwidth = 1, colour = "black", 
-                            fill = "white") +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * dnorm(x, mu, sigma) },
-                  args = list(my_mix$mu[mu_order[1]], my_mix$sigma[mu_order[1]], 
-                              lam = my_mix$lambda[mu_order[1]]),
-                  colour = "red", lwd = 1) +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * dnorm(x, mu, sigma) },
-                  args = list(my_mix$mu[mu_order[2]], my_mix$sigma[mu_order[2]], 
-                              lam = my_mix$lambda[mu_order[2]]),
-                  colour = "blue", lwd = 1) +
-    ggplot2::scale_x_continuous( limit = c(0, lower+100), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 3*n* my_mix$lambda[mu_order[2]]* dnorm(my_mix$mu[mu_order[2]], my_mix$mu[mu_order[2]], my_mix$sigma[mu_order[2]])), oob = function(x, limits) x)+
-    ggplot2::ylab("Density") +
-    ggplot2::xlab("Values") +
-    ggplot2::ggtitle("Final GMM Fit")+
-    ggplot2::geom_vline(xintercept = equil_pt,
-                        # linetype="dotted",
-                        color = "purple",
-                        size=0.5)
-
-  q2 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_ATAC)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_ATAC), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::scale_x_continuous( limit = c(0, lower+30), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 100000), oob = function(x, limits) x)+
-    ggplot2::geom_vline(xintercept = lower,
-               # linetype="dotted",
-               color = "blue",
-               size=0.5)+
-    ggplot2::geom_vline(xintercept = barhop,
-               # linetype="dotted",
-               color = "red",
-               size=0.5)
-
-
-  q3 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_ATAC)) +
-    ggplot2::geom_histogram(binwidth =1) +
-    mapply(
-      function(mean, sd, lambda, n, binwidth) {
-        ggplot2::stat_function(
-          fun = function(x) {
-            (stats::dnorm(x, mean = mean, sd = sd)) * n * binwidth * lambda
-          }
-        )
-      },
-      mean = my_mix[["mu"]], #mean
-      sd = my_mix[["sigma"]], #standard deviation
-      lambda = my_mix[["lambda"]], #amplitude
-      n = length(observations$nCount_ATAC), #sample size
-      binwidth = 1  #binwidth used for histogram
-    ) +
-    ggplot2::xlim(true_cells-my_mix$sigma[mu_order[3]], true_cells+my_mix$sigma[mu_order[3]])+
-    ggplot2::ylim(0,75)
-
-  # graphics::par(mfrow=c(1,3))
-  # graphics::par(mar=c(5,5,4,1)+.1)
-  # print(q1)
-  # print(q2)
-  # print(q3)
-
-  egg::ggarrange(q1, q11, q2, q3 ,
-            labels = c("A", "A2","B", "C"),
-            ncol = 4, nrow = 1)
-
-  return(c(lower, barhop))
+  return(c(lower, equil_pt))
 }
 
 
@@ -324,8 +166,78 @@ equil_of_normals <- function(mu1, sd1, lam1, mu2, sd2, lam2){
 
 
 
-# plot_counts <- function(nCount, max, min, vline1=NULL, vline2=NULL){
-#   
-#   
-# }
+#' Plot histogram of counts for lower and barhop_end inference
+#'
+#' @param nCount vector with the RNA or ATAC counts
+#' @param mu1 mu of first Gaussian
+#' @param sigma1 sigma of first Gaussian
+#' @param lam1 lambda of first Gaussian
+#' @param mu2 mu of first Gaussian
+#' @param sigma2 sigma of first Gaussian
+#' @param lam2 lambda of first Gaussian
+#' @param max upper limit of RNA range
+#' @param vline1 x value of first vertical line
+#' @param vline2 x vavlue of second vertical line
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000, vline1, vline2){
+  
+  observations = data.frame( "nCount" = nCount )
+  
+  n = length(observations$nCount)
+  
+  overview = ggplot2::ggplot(observations) +
+    ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
+                            fill = "white") +
+    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
+                           args = list(mu1, sigma1, lam = lam1),
+                           colour = "red", lwd = 1) +
+    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
+                           args = list(mu2, sigma2, lam = lam2),
+                           colour = "blue", lwd = 1) +
+    ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
+    ggplot2::scale_y_continuous( limit = c(0, max), oob = function(x, limits) x)+
+    ggplot2::ylab("Frequency") +
+    ggplot2::xlab("nCount") +
+    ggplot2::ggtitle("Final GMM Fit")+
+    ggplot2::geom_vline(xintercept = vline1,
+                        # linetype="dotted",
+                        color = "purple",
+                        size=0.5)+
+  ggplot2::geom_vline(xintercept = vline2,
+                      # linetype="dotted",
+                      color = "blue",
+                      size=0.5)
+
+  
+  zoomin = ggplot2::ggplot(observations) +
+    ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
+                            fill = "white") +
+    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
+                           args = list(mu1, sigma1, lam = lam1),
+                           colour = "red", lwd = 1) +
+    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
+                           args = list(mu2, sigma2, lam = lam2),
+                           colour = "blue", lwd = 1) +
+    ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
+    ggplot2::scale_y_continuous( limit = c(0, 3*n* lam2* dnorm(mu2, mu2, sigma2)), oob = function(x, limits) x)+
+    ggplot2::ylab("Frequency") +
+    ggplot2::xlab("nCount") +
+    ggplot2::ggtitle("Final GMM Fit")+
+    ggplot2::geom_vline(xintercept = vline1,
+                        # linetype="dotted",
+                        color = "purple",
+                        size=0.5)+
+    ggplot2::geom_vline(xintercept = vline2,
+                        # linetype="dotted",
+                        color = "blue",
+                        size=0.5)
+  
+  print(overview)
+  print(zoomin)
+  
+}
 

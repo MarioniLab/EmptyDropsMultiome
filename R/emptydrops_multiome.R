@@ -45,12 +45,16 @@
 #' @export
 #'
 #' @examples
-emptydrops_multiome <- function(count_matrix_rna, lower_rna, barhop_rna, count_matrix_atac, lower_atac, barhop_atac, niter_rna=10000, niter_atac=25000 ){
+emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NULL, count_matrix_atac, lower_atac=NULL, barhop_atac=NULL, niter_rna=10000, niter_atac=25000 ){
   # calls cells using a single modality
   # inputs: modality_rna is a list with a count matrix, an integer value for lower, and an integer value for barhop
   #         likewise for modality_atac
   # outputs: dataframe like e.out
-
+  
+  if (lower_rna<0 | barhop_rna<0 | lower_atac<0 | barhop_atac<0){
+    stop("barhop and lower parameters should be non negative")
+  }
+  
   if ( is.null(lower_rna)  | is.null(barhop_rna) ){
     exp_counts_per_cell = unname(Matrix::colSums(count_matrix_rna))
     mu1 = fit_3_normals(exp_counts_per_cell)

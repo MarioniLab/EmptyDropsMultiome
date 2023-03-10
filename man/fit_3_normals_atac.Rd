@@ -5,7 +5,7 @@
 \title{Fits a mixture of three normal distributions to histogram of ATAC counts, to infer the parameters lower and barhop_end
 which are used in emptydrops.}
 \usage{
-fit_3_normals_atac(exp_counts_per_cell)
+fit_3_normals_atac(exp_counts_per_cell, verbose = TRUE)
 }
 \arguments{
 \item{exp_counts_per_cell}{a vector with the ATAC library size per barcode.}
