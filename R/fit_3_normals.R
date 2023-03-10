@@ -114,7 +114,7 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
       n = length(observations$nCount_RNA), #sample size
       binwidth = 1  #binwidth used for histogram
     ) +
-    ggplot2::scale_x_continuous( limit = c(true_cells-my_mix$sigma[mu_order[3]], true_cells+my_mix$sigma[mu_order[3]]), oob = function(x, limits) x)+
+    ggplot2::scale_x_continuous( limit = c(mu_true_cells-my_mix$sigma[mu_order[3]], true_cells+my_mix$sigma[mu_order[3]]), oob = function(x, limits) x)+
     ggplot2::ylim(0,75)
 
   egg::ggarrange(q1, q2, q3 ,
