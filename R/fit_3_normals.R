@@ -2,33 +2,45 @@
 #' which are used in emptydrops.
 #'
 #' @param exp_counts_per_cell a vector with RNA library size per barcode.
+#' @param verbose a Boolean variable indicating whether to print computation messages.
 #'
 #' @return A 2d vector with the values lower and barhop_end for RNA.
 #'
 #' @export
 #'
 #' @examples
-fit_3_normals <- function(exp_counts_per_cell){
+fit_3_normals <- function(exp_counts_per_cell, verbose){
 
   #exp_counts_per_cell = unname(Matrix::colSums(srat_029_all@assays[["RNA"]]@counts))
   #exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
 
   my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
-  print(paste0("the mu's are : ", my_mix$mu[1],", ", my_mix$mu[2],", ", my_mix$mu[3] ))
-  my_mix$mu
-  print(paste0("the sigma's are : ", my_mix$sigma[1],", ", my_mix$sigma[2],", ", my_mix$sigma[3] ))
-  my_mix$sigma
-  print(paste0("the lambdas are : ", my_mix$lambda[1],", ", my_mix$lambda[2],", ", my_mix$lambda[3] ))
-  my_mix$lambda
 
   mu_order = order(my_mix$mu)
-  mu_order
-
-  lower = my_mix$mu[mu_order[2]]+1.5*my_mix$sigma[mu_order[2]]
-  lower
-  barhop = my_mix$mu[mu_order[1]]+4*my_mix$sigma[mu_order[1]]
-  barhop
-  true_cells = my_mix$mu[mu_order[3]]
+  mu_barhop = my_mix$mu[mu_order[1]]
+  mu_ambient = my_mix$mu[mu_order[2]]
+  mu_true_cells = my_mix$mu[mu_order[3]]
+  lower = mu_ambient+1.5*my_mix$sigma[mu_order[2]]
+  barhop = mu_barhop+4*my_mix$sigma[mu_order[1]]
+  
+  n = length(exp_counts_per_cell)
+  equil_pt = equil_of_normals(mu_barhop, my_mix$sigma[mu_order[1]], my_mix$lambda[mu_order[1]],
+                              mu_ambient, my_mix$sigma[mu_order[2]], my_mix$lambda[mu_order[2]])
+  
+  if (verbose){
+    
+    print(paste0("the mu's are : ", my_mix$mu[1],", ", my_mix$mu[2],", ", my_mix$mu[3] ))
+    my_mix$mu
+    print(paste0("the sigma's are : ", my_mix$sigma[1],", ", my_mix$sigma[2],", ", my_mix$sigma[3] ))
+    my_mix$sigma
+    print(paste0("the lambdas are : ", my_mix$lambda[1],", ", my_mix$lambda[2],", ", my_mix$lambda[3] ))
+    my_mix$lambda
+    print(paste0("equil point is ", equil_pt) )
+    print(paste0("the lower is : ", lower ))
+    print(paste0("the barhop_end is : ", barhop ))
+    
+  }
+  
   observations = data.frame( "nCount_RNA" = exp_counts_per_cell )
 
   q1 = ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
@@ -309,4 +321,11 @@ equil_of_normals <- function(mu1, sd1, lam1, mu2, sd2, lam2){
   return(equil_pt)
   
 }
+
+
+
+# plot_counts <- function(nCount, max, min, vline1=NULL, vline2=NULL){
+#   
+#   
+# }
 
