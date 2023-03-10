@@ -19,12 +19,29 @@ print(sum(eD.out_multi$FDR_multi<0.001 & ! is.na(eD.out_multi$FDR_multi)))
 
 
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("dataframe is not empty", {
+  expect_equal(sum(eD.out_multi$Total_RNA) > 0, TRUE)
+  expect_equal(sum(eD.out_multi$Total_chromatin) > 0, TRUE)
+  expect_equal(sum(eD.out_multi$FDR_multi) > 0, TRUE)
 })
 
 
 
+lower_rna = NULL
+barhop_rna = NULL
+lower_atac = NULL
+barhop_atac = NULL
+
+eD.out_multi <- emptydrops_multiome(count_matrix_rna, lower_rna, barhop_rna, count_matrix_atac, lower_atac, barhop_atac )
+print("the number of cells detected is: ")
+print(sum(eD.out_multi$FDR_multi<0.001 & ! is.na(eD.out_multi$FDR_multi)))
+
+
+test_that("dataframe is not empty", {
+  expect_equal(sum(eD.out_multi$Total_RNA) > 0, TRUE)
+  expect_equal(sum(eD.out_multi$Total_chromatin) > 0, TRUE)
+  expect_equal(sum(eD.out_multi$FDR_multi) > 0, TRUE)
+})
 
 
 

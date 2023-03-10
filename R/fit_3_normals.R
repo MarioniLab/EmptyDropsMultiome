@@ -134,7 +134,8 @@ fit_3_normals_atac <- function(exp_counts_per_cell){
   
   
   #my_mix <- normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
-  t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09))
+  t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
+                                           mu=c(5,100,20000), sigma=c(5,50,800) , epsilon=1e-09))
   print(inherits(t,"try-error"))
   if( inherits(t,"try-error")  ){
     my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))

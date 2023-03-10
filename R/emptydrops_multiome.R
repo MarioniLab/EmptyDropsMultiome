@@ -52,7 +52,7 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna, barhop_rna, count_m
   # outputs: dataframe like e.out
 
   if ( is.null(lower_rna)  | is.null(barhop_rna) ){
-    exp_counts_per_cell = unname(Matrix::colSums(count_matrix))
+    exp_counts_per_cell = unname(Matrix::colSums(count_matrix_rna))
     mu1 = fit_3_normals(exp_counts_per_cell)
     lower_rna = mu1[1]
     barhop_rna = mu1[2]
