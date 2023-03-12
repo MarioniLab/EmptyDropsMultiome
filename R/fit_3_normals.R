@@ -24,7 +24,7 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
   mu_ambient = my_mix$mu[mu_order[2]]
   mu_true_cells = my_mix$mu[mu_order[3]]
   
-  if (mu_barhop > 100 | mu_ambient >700){
+  if (mu_barhop > 100 | mu_ambient >700 | mu_barhop>mu_ambient-15){
     my_mix <- data.frame("mu"=c(25, 200, 1000  ), "sigma"=c(1, 60, 300  ), "lambda"= c(1/1.15, 0.10/1.15, 0.05/1.15))
     n = length(exp_counts_per_cell)
     mu_order = order(my_mix$mu)
@@ -88,7 +88,7 @@ fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
   mu_ambient = my_mix$mu[mu_order[2]]
   mu_true_cells = my_mix$mu[mu_order[3]]
   
-  if (mu_barhop > 60 | mu_ambient >600){
+  if (mu_barhop > 60 | mu_ambient >600 | mu_barhop>mu_ambient-15){
     my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))
     mu_order = order(my_mix$mu)
     mu_barhop = my_mix$mu[mu_order[1]]
