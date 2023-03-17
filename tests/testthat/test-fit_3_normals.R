@@ -48,11 +48,14 @@ max_soups = 50
 mean_cells = 20000
 nCount_atac = round(c(  runif(hops, min=0, max=max_hops), runif(soups, min=max_hops, max=max_soups) , rnorm(cells, mean=mean_cells, sd=150) ))
 out_atac = fit_3_normals_atac(nCount_atac)
+nCount = round(c(  runif(hops, min=0, max=max_hops), runif(soups, min=max_hops, max=max_soups) , rnorm(cells, mean=mean_cells, sd=150) ))
+out = fit_3_normals(nCount)
 test_that("in case of bad convergence test default parameters are activated", {
   expect_equal( out_atac[1], 160 )
   expect_equal( out_atac[2], 4.625116 )
+  expect_equal( out[1], 160 )
+  expect_equal( out[2], 4.625116 )
 })
-
 
 
 
