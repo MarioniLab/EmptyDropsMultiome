@@ -39,7 +39,7 @@ test_that("ATAC: barhop_end is between the mean of barhops and the mean of ambie
 
 
 
-# Cause bad convergence in ATAC
+# Cause bad convergence in ATAC and RNA
 hops = 1
 soups = 1
 cells = 1
@@ -53,8 +53,8 @@ out = fit_3_normals(nCount)
 test_that("in case of bad convergence test default parameters are activated", {
   expect_equal( out_atac[1], 160 )
   expect_equal( out_atac[2], 4.625116 )
-  expect_equal( out[1], 160 )
-  expect_equal( out[2], 4.625116 )
+  expect_equal( out[1], 290.00000 )
+  expect_equal( out[2], 29.567552 )
 })
 
 

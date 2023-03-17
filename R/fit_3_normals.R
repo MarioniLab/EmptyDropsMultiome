@@ -10,14 +10,20 @@
 #'
 fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 
-  my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
+  my_mix <- tryCatch(
+    {
+      mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09)
+    },
+    error=function(cond) {
+      message("Use default settings for barhop_end and lower")
+      # Choose a default values in case of convergence error
+      return(data.frame("mu"=c(25, 200, 1000  ), "sigma"=c(1, 60, 300  ), "lambda"= c(1/1.15, 0.10/1.15, 0.05/1.15)))
+    },
+    warning=function(cond) {},
+    finally={}
+  )    
   
-  t <- try(   my_mix <- mixtools::normalmixEM(exp_counts_per_cell, mu=c(5,500,1200), sigma=c(5,50,800) , epsilon=1e-09) )
-  print(inherits(t,"try-error"))
-  if( inherits(t,"try-error")  ){
-    my_mix <- data.frame("mu"=c(25, 200, 1000  ), "sigma"=c(1, 60, 300  ), "lambda"= c(1/1.15, 0.10/1.15, 0.05/1.15))
-  }
-
+  
   n = length(exp_counts_per_cell)
   mu_order = order(my_mix$mu)
   mu_barhop = my_mix$mu[mu_order[1]]
@@ -75,12 +81,28 @@ fit_3_normals <- function(exp_counts_per_cell, verbose=TRUE){
 #'
 fit_3_normals_atac <- function(exp_counts_per_cell, verbose=TRUE){
   
-  t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
-                                           mu=c(5,100,10000), sigma=c(5,50,800) , epsilon=1e-09))
-  print(inherits(t,"try-error"))
-  if( inherits(t,"try-error")  ){
-    my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))
-  }
+  # t <- try(my_mix <- mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
+  #                                          mu=c(5,100,10000), sigma=c(5,50,800) , epsilon=1e-09))
+  # print(inherits(t,"try-error"))
+  # if( inherits(t,"try-error")  ){
+  #   my_mix <- data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05))
+  # }
+  # 
+  
+  my_mix <- tryCatch(
+    {
+      mixtools::normalmixEM(exp_counts_per_cell, lambda=c(6*10^5/(7*10^5), 8*10^4/(7*10^5), 10^4/(7*10^5) ), 
+                            mu=c(5,100,10000), sigma=c(5,50,800) , epsilon=1e-09)
+    },
+    error=function(cond) {
+      message("Use default settings for barhop_end and lower")
+      # Choose a default values in case of convergence error
+      return(data.frame("mu"=c(1, 40, 800  ), "sigma"=c(1, 60, 600  ), "lambda"= c(1,0.10,0.05)))
+    },
+    warning=function(cond) {},
+    finally={}
+  )    
+  
   
   n = length(exp_counts_per_cell)
   mu_order = order(my_mix$mu)
