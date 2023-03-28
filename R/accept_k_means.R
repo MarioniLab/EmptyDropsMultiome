@@ -91,8 +91,8 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
   # save the equations of the parallel lines in metadata
   e_multi.out_new@metadata["k_means_slope"] = equation_k_means[2]
   e_multi.out_new@metadata["k_means_intercept"] = equation_k_means[1]
-  e_multi.out_new@metadata["higher_intercept"] = equation_parallel[2]
-  e_multi.out_new@metadata["lower_intercept"] = equation_lower[2]
+  e_multi.out_new@metadata["higher_intercept"] = equation_parallel[1]
+  e_multi.out_new@metadata["lower_intercept"] = equation_lower[1]
   
   return(e_multi.out_new)
 }
