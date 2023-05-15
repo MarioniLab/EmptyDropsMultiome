@@ -2,28 +2,24 @@
 #' calculates their mean RNA counts and mean ATAC counts.
 #'
 #' @param data Dataframe with data$rna being the number of RNA counts, and data$atac being the number of ATAC counts.
+#' @param equation A vector c(intercept, slope) that defines a line in 2d Euclidean space.
 #'
 #' @return A real vector with the two mean values.
 #'
-find_tip <- function(data){
+find_tip <- function(data, equation){
   # data: dataframe with data$rna being the number of RNA counts, and data$atac being the number of ATAC counts
   # output: center coordinates of the center of the droplets in the top percentile
-  p99_rna = stats::quantile(data$Total_RNA, probs = c(0.99), na.rm=TRUE )
-  p999_atac = stats::quantile(data$Total_chromatin, probs = c(0.999), na.rm=TRUE )
-  print("the tip has rna count > ")
-  print(p99_rna)
-  print("the tip has atac count > ")
-  print(p999_atac)
-  tip = data$Total_RNA > p99_rna & data$Total_chromatin > p999_atac
-
-  if (sum(tip)==0){
-    p95_rna = stats::quantile(data$Total_RNA, probs = c(0.95), na.rm=TRUE )
-    p95_atac = stats::quantile(data$Total_chromatin, probs = c(0.95), na.rm=TRUE )
-    tip = data$Total_RNA > p95_rna & data$Total_chromatin > p95_atac
-
-  }
-
+  
+  counts = log10(data$Total_RNA+0.1) - equation[2] * log10(data$Total_chromatin + 0.1)
+  p99_counts = stats::quantile(counts, probs = c(0.99), na.rm=TRUE )
+  tip = counts > p99_counts
+  
   tip_center <- c( mean(data$Total_RNA[tip]),   mean(data$Total_chromatin[tip]) )
+  
+  print("the tip has rna count  ")
+  print(tip_center[1])
+  print("the tip has atac count  ")
+  print(tip_center[2])
 
   return(tip_center)
 
@@ -91,10 +87,7 @@ calc_intercept_of_parallel_line <- function(equation, dist){
 #'
 calc_ambiguous_above <- function(data, equation){
   # given the data, calculate the ambiguous above area (specifically the line outlining its upper bound) (i.e. the area just north of the cellranger-arc line)
-  tip_center <- find_tip(data)
-
-  print("tip_center")
-  print(tip_center)
+  tip_center <- find_tip(data, equation)
 
   # log transform the coordinates
   tip_center = c( log10(tip_center[1]+0.1), log10(tip_center[2]+0.1) )
@@ -102,7 +95,12 @@ calc_ambiguous_above <- function(data, equation){
   dist = dist_point_to_line(equation, tip_center) / 1.5
 
   equation_parallel = calc_intercept_of_parallel_line(equation, dist)
-
+  
+  print("equation_parallel")
+  print(equation_parallel)
+  print("equation")
+  print(equation)
+  
   return(equation_parallel)
 
 
@@ -124,7 +122,14 @@ calc_lower_line <- function(x, y, equation){
 
   slope = equation[2]
   intercept = y - slope * x
+  
+  if(intercept>equation[1]){
+    intercept = equation[1]
+  }
 
+  print("lower_line")
+  print(c( intercept, slope))
+  
   return( c( intercept, slope) )
 }
 

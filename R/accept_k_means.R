@@ -66,7 +66,7 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
 
 
   # calculate equation_lower and reject cells below it
-  equation_lower = calc_lower_line(log10(lower_atac+0.1), log10(lower_rna+0.1), equation_parallel)
+  equation_lower = calc_lower_line(log10(lower_atac+0.1), log10(lower_rna+0.1), equation_k_means)
   e_multi.out_new$FDR_multi[log10(e_multi.out_new$Total_RNA+0.1) < equation_lower[2] * log10(e_multi.out_new$Total_chromatin + 0.1) + equation_lower[1] ] <- 1
 
   # turn FDR_multi==NA to FDR_multi==1
