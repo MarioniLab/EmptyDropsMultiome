@@ -17,9 +17,9 @@ find_tip <- function(data, equation){
   tip_center <- c( mean(data$Total_RNA[tip]),   mean(data$Total_chromatin[tip]) )
   
   print("the tip has rna count  ")
-  print(tip_center[1])
+  print(log10(tip_center[1]+0.1))
   print("the tip has atac count  ")
-  print(tip_center[2])
+  print(log10(tip_center[2]+0.1))
 
   return(tip_center)
 
@@ -69,7 +69,7 @@ calc_intercept_of_parallel_line <- function(equation, dist){
   intercept1 = equation[1]
   slope = equation[2]
 
-  intercept2 = intercept1 + dist / sqrt(slope^2 + 1)
+  intercept2 = intercept1 + dist * sqrt(slope^2 + 1)
 
   return( c( intercept2, slope) )
 
@@ -92,7 +92,7 @@ calc_ambiguous_above <- function(data, equation){
   # log transform the coordinates
   tip_center = c( log10(tip_center[1]+0.1), log10(tip_center[2]+0.1) )
 
-  dist = dist_point_to_line(equation, tip_center) / 1.5
+  dist = dist_point_to_line(equation, tip_center) / 2
 
   equation_parallel = calc_intercept_of_parallel_line(equation, dist)
   
