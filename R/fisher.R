@@ -13,26 +13,22 @@ fisher_v2 <- function(pvalues)
   {
     return(NA)
   }
-
   if(length(pvalues)==0)
   {
     return(NA)
   }
   if(any(pvalues <0) || any(pvalues >1))
   {
-    stop('p-values must be between 0 and 1')
+    stop('p-values must be in [0, 1]')
   }
   if(length(pvalues)==1)
   {
     return(pvalues)
   }
-  if(any(pvalues < 10e-320))
-  {
-    warning('Extremely low p-values at and around 10e-320 will produce an aggregated p-value of 0. Replace extreme p-values with 10e-320 to obtain an upper bound for the aggregated p-value.')
-  }
+
   chisq = -2 * sum(log(pvalues))
-  df <- 2* length(pvalues)
-  stats::pchisq(chisq, df, lower.tail = FALSE)
+  dof <- 2* length(pvalues)
+  stats::pchisq(chisq, dof, lower.tail = FALSE)
 }
 
 
