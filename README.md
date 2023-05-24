@@ -29,7 +29,7 @@ R
 ```
 library(Seurat)
 library(eDv3)
-sce <- Read10X_h5("/home/jovyan/my-conda-envs/eDv3_test_data/raw_feature_bc_matrix.h5")
+sce <- Read10X_h5("/path/to/folder/raw_feature_bc_matrix.h5")
 rna <- sce[["Gene Expression"]]
 atac <- sce[["Peaks"]]
 eD.out <- emptydrops_multiome(count_matrix_rna=rna, count_matrix_atac=atac)
