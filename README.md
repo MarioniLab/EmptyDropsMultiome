@@ -6,8 +6,8 @@ Framework for statistically powerful and accurate detection of nuclei-containing
 
 ```
 
-conda create --prefix ~/my-conda-envs/eDv3_env -c conda-forge r-base=4.3.0 -y
-conda activate /home/jovyan/my-conda-envs/eDv3_env
+conda create -n eDm_env -c conda-forge r-base=4.3.0 -y
+conda activate eDm_env
 mamba install -c conda-forge r-devtools
 R
 > library(devtools)
@@ -19,13 +19,6 @@ R
                          auth_token = "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"
                          )
 # update all, but don't worry about curl package
-
-R
-> library(Seurat)
-> library(eDv3)
-> sce <- Read10X_h5("/home/jovyan/my-conda-envs/eDv3_test_data/raw_feature_bc_matrix.h5")
-> rna <- sce[["Gene Expression"]]
-> atac <- sce[["Peaks"]]
 
 ```
 
