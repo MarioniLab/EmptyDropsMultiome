@@ -5,10 +5,12 @@
 \title{Finds the droplets that are in 1) the top 1\% of RNA counts and in the top 0.1\% of atac counts, and then
 calculates their mean RNA counts and mean ATAC counts.}
 \usage{
-find_tip(data)
+find_tip(data, equation)
 }
 \arguments{
 \item{data}{Dataframe with data$rna being the number of RNA counts, and data$atac being the number of ATAC counts.}
+
+\item{equation}{A vector c(intercept, slope) that defines a line in 2d Euclidean space.}
 }
 \value{
 A real vector with the two mean values.

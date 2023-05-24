@@ -1,12 +1,11 @@
-Package: eDv3
-Title: Detects cell containing droplets
+Package: EmptyDropsMultiome
+Title: Sensitive and specific selection of nuclei-containing droplets in multiome datasets
 Version: 0.0.0.9000
 Authors@R: 
     person("Stathis", "Megas", , "stathismegas@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2038-3040"))
-Description: Droplet-based protocols for single-cell sequencing can lead to droplets without a cell but with free floating fragments, 
-             which would appear as cells thereby confounding downstream analysis.
-License: MIT + file LICENSE
+Description: Sensitive and specific selection of nuclei-containing droplets in multiome datasets without hard cut-off thresholds.
+License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

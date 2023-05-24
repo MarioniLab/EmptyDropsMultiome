@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(eDv3)
+library(EmptyDropsMultiome)
 
-test_check("eDv3")
+test_check("EmptyDropsMultiome")
