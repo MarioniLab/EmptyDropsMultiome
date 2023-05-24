@@ -52,8 +52,8 @@ aggr_p_values <- function( e.out1, e.out2){
   rownames(e_multi.out) <- e_multi.out$Row.names
 
   # aggregate p-values
-  aggr_pval <- apply( e_multi.out[,c('PValue_chromatin','PValue_RNA')], 1, function(x) fisher_v2(x) )
-  #aggr_pval <- apply( e_multi.out[,c('PValue_chromatin','PValue_RNA')], 1, function(x) balanced_aggr(x,r=1) )
+  #aggr_pval <- apply( e_multi.out[,c('PValue_chromatin','PValue_RNA')], 1, function(x) fisher_v2(x) )
+  aggr_pval <- apply( e_multi.out[,c('PValue_chromatin','PValue_RNA')], 1, function(x) balanced_aggr(x,r=1) )
 
 
   # correct aggregated p-values by the BH method to control the fdr
