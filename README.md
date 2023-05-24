@@ -6,11 +6,43 @@ Framework for statistically powerful and accurate detection of nuclei-containing
 
 ```
 
-# Install development version:
-library(devtools)
-devtools::install_github("MarioniLab/emptyDrops_multiome", ref="main") 
+conda create --prefix ~/my-conda-envs/eDv3_env -c conda-forge r-base=4.3.0 -y
+conda activate /home/jovyan/my-conda-envs/eDv3_env
+mamba install -c conda-forge r-devtools
+R
+> library(devtools)
+> if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+> BiocManager::install("DropletUtils")
+> devtools::install_github("MarioniLab/emptyDrops_multiome",
+                         ref="main",
+                         auth_token = "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"
+                         )
+# update all, but don't worry about curl package
+
+R
+> library(Seurat)
+> library(eDv3)
+> sce <- Read10X_h5("/home/jovyan/my-conda-envs/eDv3_test_data/raw_feature_bc_matrix.h5")
+> rna <- sce[["Gene Expression"]]
+> atac <- sce[["Peaks"]]
+
+```
+
+
+
+## Vignette in R
+
+```
+library(Seurat)
+library(eDv3)
+sce <- Read10X_h5("/home/jovyan/my-conda-envs/eDv3_test_data/raw_feature_bc_matrix.h5")
+rna <- sce[["Gene Expression"]]
+atac <- sce[["Peaks"]]
+eD.out <- emptydrops_multiome(count_matrix_rna=rna, count_matrix_atac=atac)
+print("the number of cells detected is: ")
+print(sum(eD.out$FDR_multi<0.001 & ! is.na(eD.out$FDR_multi)))
 
 
 ```
 
-this works
