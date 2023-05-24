@@ -1,4 +1,4 @@
-# EmptyDrops-multiome
+# EmptyDropsMultiome
 Framework for statistically powerful and accurate detection of nuclei-containing droplets in single-cell GEX+ATAC multiome data. The method builds on a cell calling method for droplet-based scRNA data called [EmptyDrops](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y). It can deal with diverse samples (from highly homogeneous to highly heterogeneous) by creating the ATAC and RNA profile of the ambient noise and then testing each droplet for deviations from it.
 
 
@@ -28,7 +28,7 @@ R
 
 ```
 library(Seurat)
-library(eDv3)
+library(EmptyDropsMultiome)
 sce <- Read10X_h5("/path/to/folder/raw_feature_bc_matrix.h5")
 rna <- sce[["Gene Expression"]]
 atac <- sce[["Peaks"]]
