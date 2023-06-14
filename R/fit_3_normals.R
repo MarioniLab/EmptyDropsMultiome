@@ -206,28 +206,28 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
   
   n = length(observations$nCount)
   
-  overview = ggplot2::ggplot(observations) + ggplot2::theme_bw() +
-    ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
-                            fill = "black") +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
-                           args = list(mu1, sigma1, lam = lam1),
-                           colour = "red", lwd = 1) +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
-                           args = list(mu2, sigma2, lam = lam2),
-                           colour = "blue", lwd = 1) +
-    ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, max), oob = function(x, limits) x)+
-    ggplot2::ylab("Frequency") +
-    ggplot2::xlab("nCount") +
-    ggplot2::ggtitle("Final GMM Fit")+
-    ggplot2::geom_vline(xintercept = vline1,
-                        # linetype="dotted",
-                        color = "purple",
-                        size=0.5)+
-  ggplot2::geom_vline(xintercept = vline2,
-                      # linetype="dotted",
-                      color = "blue",
-                      size=0.5)
+#   overview = ggplot2::ggplot(observations) + ggplot2::theme_bw() +
+#     ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
+#                             fill = "black") +
+#     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
+#                            args = list(mu1, sigma1, lam = lam1),
+#                            colour = "red", lwd = 1) +
+#     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
+#                            args = list(mu2, sigma2, lam = lam2),
+#                            colour = "blue", lwd = 1) +
+#     ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
+#     ggplot2::scale_y_continuous( limit = c(0, max), oob = function(x, limits) x)+
+#     ggplot2::ylab("Frequency") +
+#     ggplot2::xlab("nCount") +
+#     ggplot2::ggtitle("Final GMM Fit")+
+#     ggplot2::geom_vline(xintercept = vline1,
+#                         # linetype="dotted",
+#                         color = "purple",
+#                         size=0.5)+
+#   ggplot2::geom_vline(xintercept = vline2,
+#                       # linetype="dotted",
+#                       color = "blue",
+#                       size=0.5)
   
   overview_nofit = ggplot2::ggplot(observations) + ggplot2::theme_bw() +
     ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
@@ -236,7 +236,7 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
     ggplot2::scale_y_continuous( limit = c(0, max), oob = function(x, limits) x)+
     ggplot2::ylab("Frequency") +
     ggplot2::xlab("nCount") +
-    ggplot2::ggtitle("Final GMM Fit")+
+    ggplot2::ggtitle("GMM Fit")+
     ggplot2::geom_vline(xintercept = vline1,
                         # linetype="dotted",
                         color = "purple",
@@ -247,32 +247,32 @@ plot_counts <- function(nCount, mu1, sigma1, lam1, mu2, sigma2, lam2, max=50000,
                         size=0.5)
 
   
-  zoomin = ggplot2::ggplot(observations) + ggplot2::theme_bw() + 
-    ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
-                            fill = "black") +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
-                           args = list(mu1, sigma1, lam = lam1),
-                           colour = "red", lwd = 1) +
-    ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
-                           args = list(mu2, sigma2, lam = lam2),
-                           colour = "blue", lwd = 1) +
-    ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
-    ggplot2::scale_y_continuous( limit = c(0, 3*n* lam2* stats::dnorm(mu2, mu2, sigma2)), oob = function(x, limits) x)+
-    ggplot2::ylab("Frequency") +
-    ggplot2::xlab("nCount") +
-    ggplot2::ggtitle("Final GMM Fit")+
-    ggplot2::geom_vline(xintercept = vline1,
-                        # linetype="dotted",
-                        color = "purple",
-                        size=0.5)+
-    ggplot2::geom_vline(xintercept = vline2,
-                        # linetype="dotted",
-                        color = "blue",
-                        size=0.5)
+#   zoomin = ggplot2::ggplot(observations) + ggplot2::theme_bw() + 
+#     ggplot2::geom_histogram(ggplot2::aes(x = nCount), binwidth = 1, colour = "black", 
+#                             fill = "black") +
+#     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) { n*lam * stats::dnorm(x, mu, sigma) },
+#                            args = list(mu1, sigma1, lam = lam1),
+#                            colour = "red", lwd = 1) +
+#     ggplot2::stat_function(geom = "line", fun = function(x, mu, sigma, lam) {n* lam * stats::dnorm(x, mu, sigma) },
+#                            args = list(mu2, sigma2, lam = lam2),
+#                            colour = "blue", lwd = 1) +
+#     ggplot2::scale_x_continuous( limit = c(0, vline2+100), oob = function(x, limits) x)+
+#     ggplot2::scale_y_continuous( limit = c(0, 3*n* lam2* stats::dnorm(mu2, mu2, sigma2)), oob = function(x, limits) x)+
+#     ggplot2::ylab("Frequency") +
+#     ggplot2::xlab("nCount") +
+#     ggplot2::ggtitle("Final GMM Fit")+
+#     ggplot2::geom_vline(xintercept = vline1,
+#                         # linetype="dotted",
+#                         color = "purple",
+#                         size=0.5)+
+#     ggplot2::geom_vline(xintercept = vline2,
+#                         # linetype="dotted",
+#                         color = "blue",
+#                         size=0.5)
   
-  print(overview) 
+#   print(overview) 
   print(overview_nofit) 
-  print(zoomin)
+#   print(zoomin)
   
 }
 
