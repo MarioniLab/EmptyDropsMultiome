@@ -139,7 +139,7 @@ call_cells <- function(data, verbose=TRUE){
     print(  data.frame( "rna_count"=c(mean_rna_empty ,mean_rna_cell), "atac_count"=c(mean_atac_empty, mean_atac_cell ) )   )
 
     km <- stats::kmeans( df_for_km[keep, c("rna_count", "atac_count")], centers=data.frame( "rna_count"=c(mean_rna_empty ,mean_rna_cell), "atac_count"=c(mean_atac_empty, mean_atac_cell ) )    )
-    print(paste0("number of cells in km object is ", sum(km[["cluster"]])-length(km[["cluster"]]) ) )
+    #print(paste0("number of cells in km object is ", sum(km[["cluster"]])-length(km[["cluster"]]) ) )
 
     # take center information and then exchange rna and atac (since atac needs to be on the x axis)
     center1 = c( km$centers[1,2], km$centers[1,1] )
@@ -165,17 +165,18 @@ call_cells <- function(data, verbose=TRUE){
     }
   }
 
-  # plot cell calling before label transfer
-  cell_calling_plot(log10(data$atac_count + 0.1), log10(data$rna_count + 0.1), factor(data$is_cell ), paste0("cR-arc calling before label transfer: ", sum(data$is_cell), " cells;", equation))
-  graphics::abline(a=equation[1],b=equation[2], col="blue")
+    
+#   # plot cell calling before label transfer
+#   cell_calling_plot(log10(data$atac_count + 0.1), log10(data$rna_count + 0.1), factor(data$is_cell ), paste0("cR-arc calling before label transfer: ", sum(data$is_cell), " cells;", equation))
+#   graphics::abline(a=equation[1],b=equation[2], col="blue")
 
   # transfer labels
   data <- transfer_labels_to_dedupl_v3(data)
-
   print("finished label transfer")
-  # plot cell calling after label transfer
-  cell_calling_plot(log10(data$atac_count + 0.1), log10(data$rna_count + 0.1), factor(data$is_cell ), paste0("cR-arc calling after label transfer: ", sum(data$is_cell), " cells;", equation))
-  graphics::abline(a=equation[1],b=equation[2], col="blue")
+    
+#   # plot cell calling after label transfer
+#   cell_calling_plot(log10(data$atac_count + 0.1), log10(data$rna_count + 0.1), factor(data$is_cell ), paste0("cR-arc calling after label transfer: ", sum(data$is_cell), " cells;", equation))
+#   graphics::abline(a=equation[1],b=equation[2], col="blue")
 
   print("The number of cells called by k-means is ")
   print(paste0(sum(data$is_cell), " cells"))
