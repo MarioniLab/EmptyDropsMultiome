@@ -66,8 +66,8 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NUL
 
     print(ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
       ggplot2::geom_histogram(binwidth =1) +
-      ggplot2::xlim(0, 500)+
-      ggplot2::scale_y_continuous( limit = c(0, 80000), oob = function(x, limits) x)+
+      ggplot2::xlim(0, 700)+
+      ggplot2::scale_y_continuous( limit = c(0, 100000), oob = function(x, limits) x)+
       ggplot2::geom_vline(xintercept = lower_rna,
                           # linetype="dotted",
                           color = "blue",
@@ -76,19 +76,6 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NUL
                           # linetype="dotted",
                           color = "red",
                           size=0.5) )
-
-    ggplot2::ggplot(observations, ggplot2::aes(x = nCount_RNA)) +
-      ggplot2::geom_histogram(binwidth =1) +
-      ggplot2::scale_x_continuous( limit = c(0, 10000), oob = function(x, limits) x)+
-      ggplot2::scale_y_continuous( limit = c(0, 40), oob = function(x, limits) x)+
-      ggplot2::geom_vline(xintercept = lower_rna,
-                          # linetype="dotted",
-                          color = "blue",
-                          size=0.5)+
-      ggplot2::geom_vline(xintercept = barhop_rna,
-                          # linetype="dotted",
-                          color = "red",
-                          size=0.5)
 
 
   }
@@ -107,7 +94,7 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NUL
 
     ggplot2::ggplot(observations, ggplot2::aes(x = nCount_ATAC)) +
       ggplot2::geom_histogram(binwidth =1) +
-      ggplot2::scale_x_continuous( limit = c(0, 200), oob = function(x, limits) x)+
+      ggplot2::scale_x_continuous( limit = c(0, 500), oob = function(x, limits) x)+
       ggplot2::scale_y_continuous( limit = c(0, 100000), oob = function(x, limits) x)+
       ggplot2::geom_vline(xintercept = lower_atac,
                           # linetype="dotted",
@@ -118,18 +105,7 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NUL
                           color = "red",
                           size=0.5)
 
-    ggplot2::ggplot(observations, ggplot2::aes(x = nCount_ATAC)) +
-      ggplot2::geom_histogram(binwidth =1) +
-      ggplot2::scale_x_continuous( limit = c(0, 50000), oob = function(x, limits) x)+
-      ggplot2::scale_y_continuous( limit = c(0, 40), oob = function(x, limits) x)+
-      ggplot2::geom_vline(xintercept = lower_atac,
-                          # linetype="dotted",
-                          color = "blue",
-                          size=0.5)+
-      ggplot2::geom_vline(xintercept = barhop_atac,
-                          # linetype="dotted",
-                          color = "red",
-                          size=0.5)
+
   }
 
   # call cells based on RNA
