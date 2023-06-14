@@ -12,8 +12,9 @@ test_that("out has 6 attributes and 11100 rows", {
   expect_equal(out@nrows, 11100)
 })
 
-test_that("the non NA FDRs are as many as the droplets with library size smaller than or equal to lower", {
-  expect_equal(sum(is.na(out@listData[["FDR"]])), sum(Matrix::colSums(count_matrix)<=lower))
+test_that("the NA FDRs are as many as the droplets with library size smaller than or equal to lower", {
+  expect_equal(sum(is.na(out$FDR) ), sum(Matrix::colSums(count_matrix)<=lower))
+  #expect_equal(sum(is.na(out$FDR) ), sum(Matrix::colSums(count_matrix)<barhop_end))
 })
 
 test_that("the number of droplets with barhop_amb_tent tags are as many as they should", {
