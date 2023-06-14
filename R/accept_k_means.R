@@ -83,7 +83,7 @@ accept_k_means <- function( e_multi.out, lower_atac, lower_rna){
   e_multi.out_new$FDR <- e_multi.out_new$FDR_multi
   e_multi.out_new[cells_above_ambiguous, ]$FDR_multi <- 0
 
-  cell_calling_plot(log10(e_multi.out_new$Total_chromatin + 0.1), log10(e_multi.out_new$Total_RNA + 0.1), factor(e_multi.out_new$FDR_multi<0.001 ), "eD_multi, after accepting above knee (final)")
+  cell_calling_plot(log10(e_multi.out_new$Total_chromatin + 0.1), log10(e_multi.out_new$Total_RNA + 0.1), factor(e_multi.out_new$FDR_multi<0.001 ), "eD_multi after accepting above knee")
   graphics::abline(a=equation_k_means[1],b=equation_k_means[2], col="blue")
   graphics::abline(a=equation_parallel[1],b=equation_parallel[2], col="blue")
   graphics::abline(a=equation_lower[1],b=equation_lower[2], col="blue")
