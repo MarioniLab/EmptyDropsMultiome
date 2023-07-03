@@ -92,7 +92,7 @@ calc_ambiguous_above <- function(data, equation){
   # log transform the coordinates
   tip_center = c( log10(tip_center[1]+0.1), log10(tip_center[2]+0.1) )
 
-  dist = dist_point_to_line(equation, tip_center) / 2
+  dist = dist_point_to_line(equation, tip_center) *2 / 3
 
   equation_parallel = calc_intercept_of_parallel_line(equation, dist)
   
