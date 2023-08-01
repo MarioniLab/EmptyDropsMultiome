@@ -4,7 +4,7 @@
 #' @param lower single real number at or below which droplets are used to model the RNA soup.
 #' @param barhop_end single real number below which droplets are assumed to be full of barhops and they are excluded from modeling the soup.
 #' @param niters the number of iterations to use for the simulations that compare the profile of each droplet to the ambient profile.
-#'
+#' @param seed the value at which to set the seed.
 #' @return a DataFrame (in the format of the emptyDrops outputs) with the following components:
 #' Total*:
 #' Integer, the total count for each barcode.
@@ -18,7 +18,7 @@
 #' Numeric, the p-values corrected using the Benjamini-Hochberg method
 #' @export
 #'
-emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000){
+emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000, seed=42){
   # calls cells using a single modality
   # inputs: count_matrix is a features-by-cell matrix,
   #         lower is the upper bound on the count for a droplet to be used to model the soup
@@ -37,6 +37,7 @@ emptydrops_with_barhop <- function(count_matrix, lower, barhop_end, niters=10000
   }
 
   # run emptyrdops on counts_wo_barhop
+  set.seed(seed)
   e.out <- DropletUtils::emptyDrops(counts_wo_barhop, lower=lower, niters=niters, test.ambient=TRUE  )
 
   # create df with NA for barhops

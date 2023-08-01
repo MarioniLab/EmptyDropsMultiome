@@ -45,7 +45,7 @@
 #'
 #' @export
 #'
-emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NULL, count_matrix_atac, lower_atac=NULL, barhop_atac=NULL, niter_rna=10000, niter_atac=25000, verbose=TRUE ){
+emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NULL, count_matrix_atac, lower_atac=NULL, barhop_atac=NULL, niter_rna=10000, niter_atac=25000, verbose=TRUE, seed=42 ){
   
   if (!is.null(lower_rna) & !is.null(barhop_rna) & !is.null(lower_atac) & !is.null(barhop_atac)  ){
     if (lower_rna<0 | barhop_rna<0 | lower_atac<0 | barhop_atac<0){
@@ -109,10 +109,10 @@ emptydrops_multiome <- function(count_matrix_rna, lower_rna=NULL, barhop_rna=NUL
   }
 
   # call cells based on RNA
-  eD.out_rna <- emptydrops_with_barhop(count_matrix_rna, lower_rna, barhop_rna, niters=niter_rna)
+  eD.out_rna <- emptydrops_with_barhop(count_matrix_rna, lower_rna, barhop_rna, niters=niter_rna, seed=seed)
 
   # call cells based on epigenetics
-  eD.out_atac <- emptydrops_with_barhop(count_matrix_atac, lower_atac, barhop_atac, niters=niter_atac)
+  eD.out_atac <- emptydrops_with_barhop(count_matrix_atac, lower_atac, barhop_atac, niters=niter_atac, seed=seed)
 
   # call cells based on both RNA and epigenetics
   e_multi.out <- aggr_p_values( eD.out_rna, eD.out_atac)
