@@ -6,6 +6,7 @@
 #' @param count_matrix_atac dgCMatrix with the counts for the ATAC modality.
 #' @param lower_atac single real number at or below which droplets are used to model the ATAC soup.
 #' @param barhop_atac single real number below which droplets are assumed to be full of barhops and they are excluded from modeling the soup.
+#' @param seed the value at which to set the seed.
 #' @param niter_rna single real number for the number of iteration to be performed to statistically compare the RNA modality with the ambient profile.
 #' @param niter_atac single real number for the number of iteration to be performed to statistically compare the ATAC modality with the ambient profile.
 #' @param verbose if TRUE various intermediate steps and plots are printed.
