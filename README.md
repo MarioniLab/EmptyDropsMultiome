@@ -15,9 +15,8 @@ R
     install.packages("BiocManager")
 > BiocManager::install("DropletUtils")
 > devtools::install_github("MarioniLab/emptyDrops_multiome",
-                         ref="main",
-                         auth_token = "your_token_code"
-                         )
+                         ref="main")
+
 # update all, but don't worry about curl package
 
 ```
