@@ -34,7 +34,7 @@ print(sum(eD.out$FDR_multi<0.001 & ! is.na(eD.out$FDR_multi)))
 
 ```
 
-## Vignette in R: for manual choice of lower_rna and lower_atac
+## Vignette in R: for manual choice of lower_rna, barhop_rna, lower_atac and barhop_atac
 
 ```
 library(Seurat)
@@ -42,7 +42,7 @@ library(EmptyDropsMultiome)
 sce <- Read10X_h5("/path/to/folder/raw_feature_bc_matrix.h5")
 rna <- sce[["Gene Expression"]]
 atac <- sce[["Peaks"]]
-eD.out <- emptydrops_multiome(count_matrix_rna=rna, count_matrix_atac=atac)
+eD.out <- emptydrops_multiome(count_matrix_rna=rna, count_matrix_atac=atac, lower_rna=20, barhop_rna=200, lower_atac=10, barhop_atac=200)
 print("the number of cells detected is: ")
 print(sum(eD.out$FDR_multi<0.001 & ! is.na(eD.out$FDR_multi)))
 
