@@ -17,7 +17,7 @@ R
 > devtools::install_github("MarioniLab/emptyDrops_multiome",
                          ref="main")
 
-# update all, but don't worry about curl package
+# don't worry about curl package
 
 ```
 
