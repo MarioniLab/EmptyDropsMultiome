@@ -2,7 +2,7 @@
 [EmptyDropsMultiome](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03259-x) is a framework for statistically powerful and accurate detection of nuclei-containing droplets in single-cell GEX+ATAC multiome data. The method builds on a cell calling method for droplet-based scRNA data called EmptyDrops. It can deal with diverse samples (from highly homogeneous to highly heterogeneous) by creating the ATAC and RNA profile of the ambient noise and then testing each droplet for deviations from it.
 
 <p align="center">
-  <img src="method cartoon.pdf" width="750">
+  <img src="method_cartoon.png" width="750">
 </p>
 
 
